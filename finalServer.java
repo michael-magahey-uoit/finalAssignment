@@ -9,6 +9,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
@@ -20,12 +24,26 @@ public class finalServer extends Application
 {
     Canvas canvas;
     Scene orderbookScene, priceScene, mainScene, loginScene;
+    GraphicsContext orderbookGraphics, priceGraphics;
     Socket connection;
     finalServerThread priceOrderHandler;
+
+    public void paintOrderbook()
+    {
+
+    }
+
+    public void paintPrices()
+    {
+
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception
     {
         primaryStage.setTitle("Depth of Market reader - Idle...");
+
+        //Make price and orderbook forms and set context to globals
 
         GridPane myGrid = new GridPane();
         myGrid.setAlignment(Pos.CENTER);
@@ -69,7 +87,6 @@ public class finalServer extends Application
 
         primaryStage.setTitle("Final Project - Idle...");
         loginScene = new Scene(myGrid, 300, 300);
-        primaryStage.setScene(loginScene);
 
         GridPane mainGrid = new GridPane();
         mainGrid.setAlignment(Pos.CENTER);
@@ -80,9 +97,27 @@ public class finalServer extends Application
         mainGrid.add(showPrice, 0, 1);
         mainGrid.add(showOrders, 0, 2);
 
+        showPrice.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent actionEvent)
+            {
+                primaryStage.setTitle("Final Project - Price");
+                primaryStage.setScene(priceScene);
+            }
+        });
+
+        showOrders.setOnAction(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent actionEvent)
+            {
+                primaryStage.setTitle("Final Project - Orderbook");
+                primaryStage.setScene(orderbookScene);
+            }
+        });
+
         mainScene = new Scene(mainGrid, 300, 300);
-
-
 
         primaryStage.setScene(loginScene);
         primaryStage.show();
