@@ -53,6 +53,7 @@ public class finalServerThread extends Thread
             {
                 float bid = Float.parseFloat(packet[2]);
                 float ask = Float.parseFloat(packet[3]);
+                System.out.println("New Price! Bid: " + bid + " | Ask: " + ask);
                 //Update price scene
             }
             else if (type == "OrderBook")
@@ -65,6 +66,7 @@ public class finalServerThread extends Thread
                     float volume = Float.parseFloat(data[1]);
                     String bookType = data[2];
                 }
+                System.out.println("[DEBUG] - Orderbook: " + packet[2]);
                 //Update orderbook scene
             }
         }
