@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.application.Platform;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -27,6 +28,8 @@ public class finalServer extends Application
     GraphicsContext orderbookGraphics, priceGraphics;
     Socket connection;
     finalServerThread priceOrderHandler;
+    static ServerSocket serverSocket = null;
+    static finalServerThread thread = null;
 
     public void paintOrderbook()
     {
@@ -62,16 +65,20 @@ public class finalServer extends Application
             @Override
             public void handle(ActionEvent actionEvent)
             {
-                ServerSocket serverSocket = null;
-                finalServerThread thread = null;
                 try
                 {
-                    int Port = 6800;
+                    int Port = Integer.parseInt(portDisplay.getText());
                     serverSocket = new ServerSocket(Port);
                     System.out.println("[DEBUG] - Listening on " + Port + "...");
                     Runnable acceptThread = () -> 
                     {
-                        Socket clientSocket = serverSocket.accept();
+                        Socket clientSocket = null;
+                        try{
+                            clientSocket = serverSocket.accept();
+                        }
+                        catch (IOException e){
+                            System.out.println("Socket not accepted");
+                        }
                         System.out.println("[DEBUG] - Connection Established!");
                         thread = new finalServerThread(clientSocket);
                         thread.start();
@@ -80,8 +87,7 @@ public class finalServer extends Application
                         primaryStage.setTitle("Final Project - Connected!");
                         primaryStage.setScene(mainScene);
                     };
-                    Thread t = new Thread(acceptThread);
-                    t.start();
+                    Platform.runLater(acceptThread);
                 }
                 catch (IOException ex)
                 {
