@@ -69,19 +69,24 @@ public class finalServer extends Application
                     int Port = 6800;
                     serverSocket = new ServerSocket(Port);
                     System.out.println("[DEBUG] - Listening on " + Port + "...");
-                    Socket clientSocket = serverSocket.accept();
-                    System.out.println("[DEBUG] - Connection Established!");
-                    thread = new finalServerThread(clientSocket);
-                    thread.start();
-                    priceOrderHandler = thread;
-                    connection = clientSocket;
+                    Runnable acceptThread = () -> 
+                    {
+                        Socket clientSocket = serverSocket.accept();
+                        System.out.println("[DEBUG] - Connection Established!");
+                        thread = new finalServerThread(clientSocket);
+                        thread.start();
+                        priceOrderHandler = thread;
+                        connection = clientSocket;
+                        primaryStage.setTitle("Final Project - Connected!");
+                        primaryStage.setScene(mainScene);
+                    };
+                    Thread t = new Thread(acceptThread);
+                    t.start();
                 }
                 catch (IOException ex)
                 {
                     ex.printStackTrace();
                 }
-                primaryStage.setTitle("Final Project - Connected!");
-                primaryStage.setScene(mainScene);
             }
         });
 
