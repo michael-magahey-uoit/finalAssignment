@@ -2,13 +2,13 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class finalServerThread extends threads
+public class finalServerThread extends Thread
 {
     protected Socket socket     = null;
     protected PrintWriter out   = null;
     protected BufferedReader in = null;
 
-    public finalServerThread(Socket socket, String type)
+    public finalServerThread(Socket socket)
     {
         super();
         this.socket = socket;
@@ -46,7 +46,7 @@ public class finalServerThread extends threads
         try
         {
             message = in.readLine();
-            String[] packet = message.split('|');
+            String[] packet = message.split("|");
             String symbol = packet[0];
             String type = packet[1];
             if (type == "Tick")
@@ -57,10 +57,10 @@ public class finalServerThread extends threads
             }
             else if (type == "OrderBook")
             {
-                String[] orderbook = packet[2].split('!');
+                String[] orderbook = packet[2].split("!");
                 for (String pricePoint : orderbook)
                 {
-                    String[] data = pricePoint.split('-');
+                    String[] data = pricePoint.split("-");
                     float price = Float.parseFloat(data[0]);
                     float volume = Float.parseFloat(data[1]);
                     String bookType = data[2];

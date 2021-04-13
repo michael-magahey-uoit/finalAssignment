@@ -62,7 +62,7 @@ public class finalServer extends Application
             @Override
             public void handle(ActionEvent actionEvent)
             {
-                Socket serverSocket = null;
+                ServerSocket serverSocket = null;
                 finalServerThread thread = null;
                 try
                 {
@@ -71,7 +71,7 @@ public class finalServer extends Application
                     System.out.println("[DEBUG] - Listening on " + Port + "...");
                     Socket clientSocket = serverSocket.accept();
                     System.out.println("[DEBUG] - Connection Established!");
-                    thread = new finalServerThread(clientSocket, this);
+                    thread = new finalServerThread(clientSocket);
                     thread.start();
                     priceOrderHandler = thread;
                     connection = clientSocket;
@@ -123,7 +123,7 @@ public class finalServer extends Application
         primaryStage.show();
     }
 
-    public static voide main(String[] args)
+    public static void main(String[] args)
     {
         launch(args);
     }
