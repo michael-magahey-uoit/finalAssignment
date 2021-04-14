@@ -15,7 +15,7 @@ public class finalServerThread extends Thread
         try
         {
             out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
         }
         catch (IOException ex)
         {
@@ -46,11 +46,14 @@ public class finalServerThread extends Thread
         try
         {
             message = in.readLine();
+            //System.out.println(message);
             if(message != null){
-                System.out.println(message);
-                String[] packet = message.split("|");
+                String[] packet = message.split("[|]");
                 String symbol = packet[0];
                 String type = packet[1];
+                System.out.println(packet[0]);
+                System.out.println(packet[1]);
+                System.out.println(packet[2]);
                 if (type == "Tick")
                 {
                     float bid = Float.parseFloat(packet[2]);
@@ -71,12 +74,18 @@ public class finalServerThread extends Thread
                     System.out.println("[DEBUG] - Orderbook: " + packet[2]);
                     //Update orderbook scene
                 }
+                else{
+                    System.out.println(type);
+                }
             }
           
         }
         catch (IOException ex)
         {
             ex.printStackTrace();
+            return true;
+        }
+        if(message == null){
             return true;
         }
         return false;

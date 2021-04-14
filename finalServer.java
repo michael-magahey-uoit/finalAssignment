@@ -10,6 +10,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.application.Platform;
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
