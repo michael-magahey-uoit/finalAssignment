@@ -1,0 +1,11 @@
+C:\Users\Omen\source\repos\MetaTrader5FinalProject\MetaTrader5FinalProject\bin\Debug\MetaTrader5FinalProject.exe.config
+C:\Users\Omen\source\repos\MetaTrader5FinalProject\MetaTrader5FinalProject\bin\Debug\MetaTrader5FinalProject.exe
+C:\Users\Omen\source\repos\MetaTrader5FinalProject\MetaTrader5FinalProject\bin\Debug\MetaTrader5FinalProject.pdb
+C:\Users\Omen\source\repos\MetaTrader5FinalProject\MetaTrader5FinalProject\obj\Debug\MetaTrader5FinalProject.csprojAssemblyReference.cache
+C:\Users\Omen\source\repos\MetaTrader5FinalProject\MetaTrader5FinalProject\obj\Debug\MetaTrader5FinalProject.FrmConnect.resources
+C:\Users\Omen\source\repos\MetaTrader5FinalProject\MetaTrader5FinalProject\obj\Debug\MetaTrader5FinalProject.FrmMain.resources
+C:\Users\Omen\source\repos\MetaTrader5FinalProject\MetaTrader5FinalProject\obj\Debug\MetaTrader5FinalProject.Properties.Resources.resources
+C:\Users\Omen\source\repos\MetaTrader5FinalProject\MetaTrader5FinalProject\obj\Debug\MetaTrader5FinalProject.csproj.GenerateResource.cache
+C:\Users\Omen\source\repos\MetaTrader5FinalProject\MetaTrader5FinalProject\obj\Debug\MetaTrader5FinalProject.csproj.CoreCompileInputs.cache
+C:\Users\Omen\source\repos\MetaTrader5FinalProject\MetaTrader5FinalProject\obj\Debug\MetaTrader5FinalProject.exe
+C:\Users\Omen\source\repos\MetaTrader5FinalProject\MetaTrader5FinalProject\obj\Debug\MetaTrader5FinalProject.pdb
