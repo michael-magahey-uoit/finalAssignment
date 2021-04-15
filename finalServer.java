@@ -28,6 +28,7 @@ import java.util.Vector;
 
 public class finalServer extends Application
 {
+    //Declare static variables that will be modified outside of the main start method
     Canvas orderCanvas, pricesCanvas;
     Scene orderbookScene, pricesScene, mainScene, loginScene;
     GraphicsContext orderbookGraphics, priceGraphics;
@@ -39,19 +40,20 @@ public class finalServer extends Application
     static float[] askHistory = new float[200];
     static int historyIndex = 0;
 
+
+    //These functions will be called by the socket thread to update the scene
     public void paintOrderbook(float[] price, float[] volume, String[] orderType)
     {
         int lastX = 0;
 
+        //Get orderbook max orders, we will use this for the size of the rectangle
         float yMax = Float.MAX_VALUE;
-        float yMin = Float.MIN_VALUE;
 
         for (int i = 0; i < volume.length; i++)
         {
             yMax = Float.max(yMax, volume[i]);
-            yMin = Float.min(yMin, volume[i]);
         }
-
+        //Ensure that the number of order locations matches the number of price points
         pricePositions = price.length;
         if (pricePositions != volume.length)
         {
@@ -59,9 +61,11 @@ public class finalServer extends Application
             return;
         }
 
+        //This finds the thickness of each rectangle with a 10px buffer between the rectangles
         int xBase = (int)(800 / price.length);
         xBase -= (price.length * 10);
 
+        //Go through the volumes and print each rectangle respective to the order size. We change color based on the orders type (BUY/SELL)
         for (int i = 0; i < price.length; i++)
         {
             if (orderType[i] == "BOOK_TYPE_BUY")
@@ -72,6 +76,7 @@ public class finalServer extends Application
             {
                 orderbookGraphics.setStroke(Color.RED);
             }
+            //volume / max_vol = percentageHeight * height of window; gave it a 50px buffer on the top and bottom
             int height = (int)(volume[i] / yMax) * 700;
             orderbookGraphics.fillRect(lastX, 750, xBase, height);
             lastX = lastX + xBase + 10;
@@ -81,17 +86,19 @@ public class finalServer extends Application
 
     public void paintPrices(float bid, float ask)
     {
-
+        //History shift. This moves all the values to the right so that index 0 is the newest price point (this deletes the oldest value)
         for (int i = historyIndex; i > 0; i--)
         { 
-            array[i] = array[i-1]; 
+            bidHistory[i] = bidHistory[i-1];
+            askHistory[i] = askHistory[i-1];
         }
-
+        //Set the new history
         bidHistory[0] = bid;
         askHistory[0] = ask;
 
         historyIndex++;
 
+        //Get the min and max of the price points
         float yMax = Float.MIN_VALUE;
         float yMin = Float.MAX_VAULE;
 
@@ -104,7 +111,10 @@ public class finalServer extends Application
             yMin = Float.min(yMin, askHistory[i]);
         }
 
+        //Print the bid price line
         priceGraphics.setStroke(Color.BLUE);
+        //Much the same as the stock lab, we normalize the price then apply it to the height of the window
+        //we set the x increment to the length of the window divided by the number of points in the history
         int prevX = 50;
         float norm = (bidHistory[0] - yMin) / (yMax - yMin);
         float prevY = 500 - (norm * 400);
@@ -117,7 +127,10 @@ public class finalServer extends Application
             prevX = prevX + (int)incX;
             prevY = (int)yPos;
         }
+
+        //Print the ask price line
         priceGrahics.setStroke(Color.RED);
+        //Same as the bid line, pretty self explainatory
         int prevX = 50;
         float norm = (askHistory[0] - yMin) / (yMax - yMin);
         float prevY = 500 - (norm * 400);
@@ -132,6 +145,8 @@ public class finalServer extends Application
         }
     }
 
+
+    //Below isn't commented much because its just the form creation which we did 1000 times in the labs. It's self explainatory
     @Override
     public void start(Stage primaryStage) throws Exception
     {
@@ -181,7 +196,7 @@ public class finalServer extends Application
 
         priceGraphics = pricesCanvas.getGraphicsContext2D();
 
-        //Return Button
+        //Return Buttons
 
         orderReturn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -221,6 +236,7 @@ public class finalServer extends Application
                     int Port = Integer.parseInt(portDisplay.getText());
                     serverSocket = new ServerSocket(Port);
                     System.out.println("[DEBUG] - Listening on " + Port + "...");
+                    //We need to set this to a runnable so it doesn't freeze the UI while awaiting a connection (C# is so much better at this)
                     Runnable acceptThread = () -> 
                     {
                         Socket clientSocket = null;
@@ -238,7 +254,7 @@ public class finalServer extends Application
                         primaryStage.setTitle("Final Project - Connected!");
                         primaryStage.setScene(mainScene);
                     };
-                    Platform.runLater(acceptThread);
+                    Platform.runLater(acceptThread); //This runs the thread but still allows it to interact with the primaryStage
                 }
                 catch (IOException ex)
                 {

@@ -19,15 +19,18 @@ MqlBookInfo  book[];
 //+------------------------------------------------------------------+
 int OnInit()
 {
+   //Check if account is in hedging mode
    if (AccountInfoInteger(ACCOUNT_MARGIN_MODE)!=ACCOUNT_MARGIN_MODE_RETAIL_HEDGING)
    {
       Print("Error! This trader only works with hedging type accounts. Please switch your account to hedging");
       return(INIT_FAILED);
+      //If not, do not initialize the expert
    }
 
    Comment(StringFormat("Waiting for the first %I64u ticks to arrive",ExtSkipFirstTicks));
    PrintFormat("Waiting for the first %I64u ticks to arrive",ExtSkipFirstTicks);
 
+   //Add OrderBook handle for the charts current symbol
    if(MarketBookAdd(_Symbol))
    {
       book_subscribed=true;
@@ -38,6 +41,7 @@ int OnInit()
       PrintFormat("%s: MarketBookAdd(%s) function returned false! GetLastError()=%d",__FUNCTION__,_Symbol,GetLastError());
    }
 
+   //Create the socket and attempt to connect to the server
    socket = SocketCreate();
    if (socket != INVALID_HANDLE)
    {
@@ -65,6 +69,7 @@ int OnInit()
 //+------------------------------------------------------------------+
 void OnDeinit(const int reason)
 {
+   //On closing of the chart, close the socket as well
    SocketClose(socket);
    EventKillTimer();
 }
@@ -73,6 +78,7 @@ void OnDeinit(const int reason)
 //+------------------------------------------------------------------+
 void Reconnect()
 {
+   //Close the socket and reconnect in case of disconnection
    SocketClose(socket);
    socket = SocketCreate();
    if (socket != INVALID_HANDLE)
@@ -99,6 +105,7 @@ void Reconnect()
 //+------------------------------------------------------------------+
 void OnTick()
 {
+   //On each price movement, send the movement information to the socket
    Print("New Tick for ", _Symbol,"! Bid: ",SymbolInfoDouble(_Symbol, SYMBOL_BID)," ASK: ",SymbolInfoDouble(_Symbol, SYMBOL_ASK));
    Print("Sending Data...");
    char data[];
@@ -122,6 +129,9 @@ void OnTick()
 //+------------------------------------------------------------------+
 void OnBookEvent(const string &symbol)
 {
+   //On each new order, send the orderbook information to the socket
+
+   //This stuff just ensures that we have enough orders to send
    static ulong starttime=0;
    static ulong tickcounter=0;
    if (!book_subscribed)
@@ -132,6 +142,8 @@ void OnBookEvent(const string &symbol)
    if(tickcounter<ExtSkipFirstTicks)
       starttime=GetMicrosecondCount();
 
+
+   //This is where we get the orderbook and send the data back to the socket
    bool getBook=MarketBookGet(symbol,book);
    
    if (getBook)
